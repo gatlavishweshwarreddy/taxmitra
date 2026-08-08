@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 import razorpay
 from google.cloud import firestore
-db = firestore.Client(project='taxmitra-504906')
+db = firestore.Client(project='taxmitra-504906', database='(default)')
 
 app = Flask(__name__)
 razorpay_client = razorpay.Client(auth=("rzp_test_TNGYrk0YZVfi3T", "8AjN3QhHoZpGtab1vbh0cCRO"))
@@ -412,7 +412,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
     </p>
     <div class="stats-bar">
         <div class="stat-item"><div class="stat-num">63M+</div><div class="stat-label">Small Businesses</div></div>
-        <div class="stat-item"><div class="stat-num">₹299</div><div class="stat-label">Per Month</div></div>
+        <div class="stat-item"><div class="stat-num">₹99</div><div class="stat-label">Early Access</div></div>
         <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Always On</div></div>
         <div class="stat-item"><div class="stat-num" id="queryCount">0</div><div class="stat-label">Queries Answered</div></div>
     </div>
@@ -518,12 +518,12 @@ HTML_PAGE = r"""<!DOCTYPE html>
     <div class="pricing">
         <div class="section-label" style="text-align:center">Pricing</div>
         <h2>Simple, Honest Pricing</h2>
-        <p>CA charges ₹5,000–₹20,000/month. TaxMitra is just ₹299/month.</p>
+        <p>CA charges ₹5,000–₹20,000/month. TaxMitra early access starts at just ₹99 one-time.
         <div class="pricing-grid">
             <div class="plan-card">
-                <div class="plan-name">Monthly Plan</div>
-                <div class="plan-price">₹299</div>
-                <div class="plan-period">per month • cancel anytime</div>
+                <div class="plan-name">Early Access</div>
+                <div class="plan-price">₹99</div>
+                <div class="plan-period">one-time payment • limited beta</div>
                 <ul class="plan-features">
                     <li><span class="check">✓</span> Unlimited tax queries</li>
                     <li><span class="check">✓</span> GST filing guidance</li>
@@ -532,13 +532,13 @@ HTML_PAGE = r"""<!DOCTYPE html>
                     <li><span class="check">✓</span> Hindi & English support</li>
                     <li><span class="check">✓</span> 24/7 availability</li>
                 </ul>
-                <button class="plan-btn" onclick="subscribe('monthly')">Start Free Trial</button>
+                <button class="plan-btn" onclick="subscribe('monthly')">Get Early Access</button>
             </div>
             <div class="plan-card featured">
-                <div class="plan-badge">🔥 BEST VALUE — Save ₹1,089</div>
-                <div class="plan-name">Annual Plan</div>
-                <div class="plan-price">₹2,499</div>
-                <div class="plan-period">per year • just ₹208/month</div>
+                <div class="plan-badge">🔥 BEST VALUE</div>
+                <div class="plan-name">Early Access Pro</div>
+                <div class="plan-price">₹299</div>
+                <div class="plan-period">one-time payment • full beta access</div>
                 <ul class="plan-features">
                     <li><span class="check">✓</span> Everything in Monthly</li>
                     <li><span class="check">✓</span> Priority AI responses</li>
@@ -547,7 +547,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
                     <li><span class="check">✓</span> Compliance calendar</li>
                     <li><span class="check">✓</span> Dedicated support</li>
                 </ul>
-                <button class="plan-btn" onclick="subscribe('annual')">Start Free Trial - Best Value</button>
+                <button class="plan-btn" onclick="subscribe('annual')">Get Pro Access</button>
             </div>
         </div>
     </div>
@@ -586,7 +586,8 @@ HTML_PAGE = r"""<!DOCTYPE html>
 </div>
 
 <footer>
-    <strong>TaxMitra</strong> — AI-Powered CA Assistant for Indian Small Businesses<br>
+    <strong>TaxMitra Beta</strong> — AI-Powered CA Assistant for Indian Small Businesses<br>
+    Early access program • Limited time offering • One-time payment<br>
     Powered by Google Gemini AI • Built with ❤️ for Bharat<br><br>
     <span style="color:#374151">Disclaimer: TaxMitra provides AI-generated guidance for informational purposes. Consult a qualified CA for complex matters.</span>
 </footer>
@@ -598,7 +599,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
   }
 
     function subscribe(plan) {
-    const amount = plan === 'annual' ? 249900 : 29900;
+    const amount = plan === 'annual' ? 29900 : 9900;
     fetch('/create-order', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
