@@ -4,6 +4,8 @@ from flask import Flask, request, jsonify, render_template_string
 import os
 from datetime import datetime
 import razorpay
+from google.cloud import firestore
+db = firestore.Client(project='taxmitra-504906')
 
 app = Flask(__name__)
 razorpay_client = razorpay.Client(auth=("rzp_test_TNGYrk0YZVfi3T", "8AjN3QhHoZpGtab1vbh0cCRO"))
@@ -412,7 +414,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
         <div class="stat-item"><div class="stat-num">63M+</div><div class="stat-label">Small Businesses</div></div>
         <div class="stat-item"><div class="stat-num">₹299</div><div class="stat-label">Per Month</div></div>
         <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Always On</div></div>
-        <div class="stat-item"><div class="stat-num">0 min</div><div class="stat-label">Wait Time</div></div>
+        <div class="stat-item"><div class="stat-num" id="queryCount">0</div><div class="stat-label">Queries Answered</div></div>
     </div>
     <div class="trust-badges">
         <div class="trust-badge"><span>🔒</span> Secure & Private</div>
@@ -632,6 +634,11 @@ HTML_PAGE = r"""<!DOCTYPE html>
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+// Update query counter
+fetch('/logs').then(r=>r.json()).then(data=>{
+    document.getElementById('queryCount').textContent = data.total_interactions + '+';
+});
+
 </script>
 </body>
 </html>"""
@@ -660,11 +667,20 @@ def chat():
         log_entry["status"] = "error"
         log_entry["error"] = str(e)
     logs.append(log_entry)
+    try:
+       db.collection('interactions').add(log_entry)
+    except:
+       pass
     return jsonify({"response": bot_response})
 
 @app.route('/logs')
 def get_logs():
-    return jsonify({"total_interactions": len(logs), "logs": logs})
+    try:
+        docs = db.collection('interactions').get()
+        all_logs = [doc.to_dict() for doc in docs]
+        return jsonify({"total_interactions": len(all_logs), "logs": all_logs})
+    except:
+        return jsonify({"total_interactions": len(logs), "logs": logs})
 
 @app.route('/health')
 def health():
