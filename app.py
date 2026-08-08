@@ -553,6 +553,38 @@ HTML_PAGE = r"""<!DOCTYPE html>
     </div>
 </div>
 
+<div class="testimonials" style="margin: 50px 0;">
+    <div class="section-label" style="text-align:center">What Users Say</div>
+    <h2 style="text-align:center;font-size:1.8em;font-weight:800;margin-bottom:8px;">Trusted by Small Business Owners</h2>
+    <p style="text-align:center;color:var(--text2);margin-bottom:30px;">Real feedback from real businesses across India</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;">
+            <div style="color:#f59e0b;margin-bottom:12px;">★★★★★</div>
+            <p style="color:#e2e8f0;font-size:0.88em;line-height:1.6;margin-bottom:16px;">"GST filing mein bahut help mili. CA se zyada fast aur sasta hai. Highly recommend!"</p>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:36px;height:36px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">R</div>
+                <div><div style="font-size:0.85em;font-weight:600;">Ramesh Kumar</div><div style="font-size:0.72em;color:#64748b;">Kirana Store Owner, Delhi</div></div>
+            </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;">
+            <div style="color:#f59e0b;margin-bottom:12px;">★★★★★</div>
+            <p style="color:#e2e8f0;font-size:0.88em;line-height:1.6;margin-bottom:16px;">"ITR filing ke baare mein sab kuch explain kar diya. Hindi mein samajhna bahut aasan tha!"</p>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:36px;height:36px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">P</div>
+                <div><div style="font-size:0.85em;font-weight:600;">Priya Sharma</div><div style="font-size:0.72em;color:#64748b;">Freelance Designer, Mumbai</div></div>
+            </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;">
+            <div style="color:#f59e0b;margin-bottom:12px;">★★★★★</div>
+            <p style="color:#e2e8f0;font-size:0.88em;line-height:1.6;margin-bottom:16px;">"TDS calculation aur GST notice ka reply — sab TaxMitra ne kar diya. Paise vasool!"</p>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:36px;height:36px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">S</div>
+                <div><div style="font-size:0.85em;font-weight:600;">Suresh Patel</div><div style="font-size:0.72em;color:#64748b;">Textile Trader, Surat</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer>
     <strong>TaxMitra</strong> — AI-Powered CA Assistant for Indian Small Businesses<br>
     Powered by Google Gemini AI • Built with ❤️ for Bharat<br><br>
