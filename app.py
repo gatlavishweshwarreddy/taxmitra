@@ -530,7 +530,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
                     <li><span class="check">✓</span> Hindi & English support</li>
                     <li><span class="check">✓</span> 24/7 availability</li>
                 </ul>
-                <button class="plan-btn" onclick="subscribe('monthly')">Get Started Today</button>
+                <button class="plan-btn" onclick="subscribe('monthly')">Start Free Trial</button>
             </div>
             <div class="plan-card featured">
                 <div class="plan-badge">🔥 BEST VALUE — Save ₹1,089</div>
@@ -545,7 +545,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
                     <li><span class="check">✓</span> Compliance calendar</li>
                     <li><span class="check">✓</span> Dedicated support</li>
                 </ul>
-                <button class="plan-btn" onclick="subscribe('annual')">Get Best Value</button>
+                <button class="plan-btn" onclick="subscribe('annual')">Start Free Trial - Best Value</button>
             </div>
         </div>
     </div>
