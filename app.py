@@ -3,8 +3,10 @@ from vertexai.generative_models import GenerativeModel
 from flask import Flask, request, jsonify, render_template_string
 import os
 from datetime import datetime
+import razorpay
 
 app = Flask(__name__)
+razorpay_client = razorpay.Client(auth=("rzp_test_TNGYrk0YZVfi3T", "8AjN3QhHoZpGtab1vbh0cCRO"))
 
 vertexai.init(project='taxmitra-504906', location='us-central1')
 model = GenerativeModel('gemini-2.5-flash')
@@ -31,7 +33,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
     <title>TaxMitra - AI CA Assistant for Indian Businesses</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         :root {
             --primary: #6366f1;
@@ -562,8 +564,41 @@ HTML_PAGE = r"""<!DOCTYPE html>
   }
 
     function subscribe(plan) {
-        alert('Thank you for choosing TaxMitra ' + plan + ' plan! Payment integration coming very soon. WhatsApp us: +91-XXXXXXXXXX');
-    }
+    const amount = plan === 'annual' ? 249900 : 29900;
+    fetch('/create-order', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({amount: amount})
+    })
+    .then(r => r.json())
+    .then(order => {
+        const options = {
+            key: 'rzp_test_TNGYrk0YZVfi3T',
+            amount: order.amount,
+            currency: 'INR',
+            name: 'TaxMitra',
+            description: plan === 'annual' ? 'Annual Plan' : 'Monthly Plan',
+            order_id: order.id,
+            handler: function(response) {
+                fetch('/verify-payment', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(response)
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if(data.status === 'success') {
+                        alert('Payment successful! Welcome to TaxMitra!');
+                    }
+                });
+            },
+            prefill: {name: '', email: '', contact: ''},
+            theme: {color: '#6366f1'}
+        };
+        const rzp = new Razorpay(options);
+        rzp.open();
+    });
+}
 
     function getTime() {
         return new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
@@ -634,6 +669,26 @@ def get_logs():
 @app.route('/health')
 def health():
     return jsonify({"status": "running", "product": "TaxMitra", "version": "1.0"})
+
+@app.route('/create-order', methods=['POST'])
+def create_order():
+    data = request.json
+    amount = data.get('amount', 29900)  # ₹299 in paise
+    order = razorpay_client.order.create({
+        "amount": amount,
+        "currency": "INR",
+        "payment_capture": 1
+    })
+    return jsonify(order)
+
+@app.route('/verify-payment', methods=['POST'])
+def verify_payment():
+    data = request.json
+    try:
+        razorpay_client.utility.verify_payment_signature(data)
+        return jsonify({"status": "success", "message": "Payment verified!"})
+    except:
+        return jsonify({"status": "failed", "message": "Payment verification failed"})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=False)

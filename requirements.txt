@@ -2,3 +2,4 @@ flask
 vertexai
 google-cloud-aiplatform
 gunicorn
+razorpay
