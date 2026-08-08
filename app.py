@@ -480,7 +480,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
     <div class="features">
         <div class="section-label" style="text-align:center">Why TaxMitra</div>
         <h2>Everything a CA does,<br>at 1% of the cost</h2>
-        <p>Powered by Google Gemini AI — the same AI used by millions worldwide</p>
+        <p>Unlike ChatGPT or Gemini — TaxMitra is specialized for Indian tax law with exact section numbers, Hindi & English support, and India-specific deadlines. Starting with India's 63M small businesses, India first. Global next. 🌍</p>
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">📊</div>
