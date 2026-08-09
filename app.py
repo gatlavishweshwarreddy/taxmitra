@@ -8,7 +8,10 @@ from google.cloud import firestore
 db = firestore.Client(project='taxmitra-504906', database='(default)')
 
 app = Flask(__name__)
-razorpay_client = razorpay.Client(auth=("rzp_live_TNV1ypM7ebZ61U", "E07Izkvb2XTwIlkbayMZTzTl"))
+razorpay_client = razorpay.Client(auth=(
+    os.environ.get("RAZORPAY_KEY_ID"),
+    os.environ.get("RAZORPAY_KEY_SECRET")
+))
 
 vertexai.init(project='taxmitra-504906', location='us-central1')
 model = GenerativeModel('gemini-2.5-flash')
@@ -600,38 +603,42 @@ HTML_PAGE = r"""<!DOCTYPE html>
 
     function subscribe(plan) {
     const amount = plan === 'annual' ? 29900 : 9900;
-    fetch('/create-order', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({amount: amount})
-    })
+    fetch('/config')
     .then(r => r.json())
-    .then(order => {
-        const options = {
-            key: 'rzp_live_TNV1ypM7ebZ61U',
-            amount: order.amount,
-            currency: 'INR',
-            name: 'TaxMitra',
-            description: plan === 'annual' ? 'Annual Plan' : 'Monthly Plan',
-            order_id: order.id,
-            handler: function(response) {
-                fetch('/verify-payment', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(response)
-                })
-                .then(r => r.json())
-                .then(data => {
-                    if(data.status === 'success') {
-                        alert('Payment successful! Welcome to TaxMitra!');
-                    }
-                });
-            },
-            prefill: {name: '', email: '', contact: ''},
-            theme: {color: '#6366f1'}
-        };
-        const rzp = new Razorpay(options);
-        rzp.open();
+    .then(config => {
+        fetch('/create-order', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({amount: amount})
+        })
+        .then(r => r.json())
+        .then(order => {
+            const options = {
+                key: config.razorpay_key,
+                amount: order.amount,
+                currency: 'INR',
+                name: 'TaxMitra',
+                description: plan === 'annual' ? 'Early Access Pro' : 'Early Access',
+                order_id: order.id,
+                handler: function(response) {
+                    fetch('/verify-payment', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(response)
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        if(data.status === 'success') {
+                            alert('Payment successful! Welcome to TaxMitra!');
+                        }
+                    });
+                },
+                prefill: {name: '', email: '', contact: ''},
+                theme: {color: '#6366f1'}
+            };
+            const rzp = new Razorpay(options);
+            rzp.open();
+        });
     });
 }
 
@@ -722,6 +729,10 @@ def get_logs():
         return jsonify({"total_interactions": len(all_logs), "logs": all_logs})
     except:
         return jsonify({"total_interactions": len(logs), "logs": logs})
+
+@app.route('/config')
+def config():
+    return jsonify({"razorpay_key": os.environ.get("RAZORPAY_KEY_ID")})
 
 @app.route('/health')
 def health():
