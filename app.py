@@ -8,7 +8,7 @@ from google.cloud import firestore
 db = firestore.Client(project='taxmitra-504906', database='(default)')
 
 app = Flask(__name__)
-razorpay_client = razorpay.Client(auth=("rzp_test_TNGYrk0YZVfi3T", "8AjN3QhHoZpGtab1vbh0cCRO"))
+razorpay_client = razorpay.Client(auth=("rzp_live_TNV1ypM7ebZ61U", "E07Izkvb2XTwIlkbayMZTzTl"))
 
 vertexai.init(project='taxmitra-504906', location='us-central1')
 model = GenerativeModel('gemini-2.5-flash')
@@ -608,7 +608,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
     .then(r => r.json())
     .then(order => {
         const options = {
-            key: 'rzp_test_TNGYrk0YZVfi3T',
+            key: 'rzp_live_TNV1ypM7ebZ61U',
             amount: order.amount,
             currency: 'INR',
             name: 'TaxMitra',
@@ -644,6 +644,14 @@ HTML_PAGE = r"""<!DOCTYPE html>
     const chatBox = document.getElementById('chatBox');
     const message = input.value.trim();
     if (!message) return;
+
+    let questionCount = parseInt(localStorage.getItem('questionCount') || '0');
+    if (questionCount >= 5) {
+        chatBox.innerHTML += '<div class="msg ai"><div class="msg-avatar ai">🤖</div><div><div class="msg-bubble">You have used your 5 free questions! 🎉<br><br>To continue, please subscribe below — just ₹99 one-time!</div><div class="msg-time">TaxMitra AI • ' + getTime() + '</div></div></div>';
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return;
+    }
+    localStorage.setItem('questionCount', questionCount + 1);
 
     chatBox.innerHTML += '<div class="msg user"><div class="msg-avatar human">👤</div><div><div class="msg-bubble">' + message + '</div><div class="msg-time">You • ' + getTime() + '</div></div></div>';
     input.value = '';
